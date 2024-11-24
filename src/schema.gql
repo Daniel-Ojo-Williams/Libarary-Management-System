@@ -1,0 +1,60 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AddMemberDtoInput {
+  email: String!
+
+  """Membership type can be one of Gold, Silver or Standard"""
+  membershipType: MembershipType!
+  name: String!
+}
+
+input CreateAdminDtoInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type LoginReponse {
+  token: String!
+  user: User!
+}
+
+input LoginUserDtoInput {
+  email: String!
+  password: String!
+}
+
+"""Membership can be one of Gold, Silver or Standard"""
+enum MembershipType {
+  GOLD
+  SILVER
+  STANDARD
+}
+
+type Mutation {
+  AddMember(addMemberInput: AddMemberDtoInput!): User!
+  CreateAdmin(createAdminInput: CreateAdminDtoInput!): User!
+  LoginUser(loginInput: LoginUserDtoInput!): LoginReponse!
+}
+
+type Query {
+  GetAllMembers: [User!]!
+}
+
+type User {
+  """Date user was added"""
+  createdAt: DateTime
+  email: String!
+  id: ID!
+  membershipType: String
+  name: String!
+  role: String
+  updatedAt: DateTime
+}
