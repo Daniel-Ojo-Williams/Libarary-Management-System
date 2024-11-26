@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { User } from './schema/user.schema';
 import { AddMemberDtoInput, CreateAdminDtoInput } from './dto/create-user.dto';
 import { LoginReponse, LoginUserDtoInput } from './dto/login-user.dto';
-import { Public } from 'src/guards/auth.guard';
+import { Public } from '../guards/auth.guard';
 
 @Resolver(() => User)
 export class UsersResolver {

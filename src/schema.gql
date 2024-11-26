@@ -49,10 +49,11 @@ type Query {
 }
 
 type User {
+  _id: ID!
+
   """Date user was added"""
   createdAt: DateTime
   email: String!
-  id: ID!
   membershipType: String
   name: String!
   role: String

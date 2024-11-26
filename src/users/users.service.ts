@@ -12,7 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDtoInput } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as ccrypto from 'node:crypto';
-import { MailerService } from 'src/mail/mail.service';
+import { MailerService } from '../mail/mail.service';
 import { ChangePasswordDtoInput } from './dto/user-update.dto';
 
 @Injectable()
@@ -32,12 +32,11 @@ export class UsersService {
         message: 'Account with email already exists, please login',
       });
     const password = await bcrypt.hash(createAdminInput.password, 12);
-    const createdAdmin = new this.usersModel({
+    return this.usersModel.create({
       ...createAdminInput,
       password,
       role: Roles.ADMIN,
     });
-    return createdAdmin.save();
   }
 
   async loginUser(loginUserInput: LoginUserDtoInput) {
@@ -53,7 +52,7 @@ export class UsersService {
 
     const token = await this.jwtService.signAsync({
       email: user.email,
-      sub: user._id,
+      sub: user.id,
     });
     return { token, user };
   }
@@ -69,12 +68,11 @@ export class UsersService {
 
     const password = ccrypto.randomBytes(4).toString('hex');
     const passwordHash = await bcrypt.hash(password, 12);
-    const newMember = new this.usersModel({
+    const user = await this.usersModel.create({
       ...addMemberInput,
       password: passwordHash,
       role: Roles.MEMBER,
     });
-    const user = await newMember.save();
     // TODO: Send User Email of their password...
     await this.mailer.sendMemberEmail(user.email, user.name, password);
     return user;
@@ -82,18 +80,25 @@ export class UsersService {
 
   async getUserProfile(userId: string): Promise<User> {
     const user = await this.usersModel.findOne({ id: userId });
-    if (!user) throw new NotFoundException({ message: 'User not found' })
+    if (!user) throw new NotFoundException({ message: 'User not found' });
     return user;
   }
 
-  async changePassword(userId: string, changePassword: ChangePasswordDtoInput): Promise<void> {
+  async changePassword(
+    userId: string,
+    changePassword: ChangePasswordDtoInput,
+  ): Promise<void> {
     const user = await this.usersModel.findOne({ id: userId });
     if (!user) throw new NotFoundException({ message: 'User not found' });
-    const oldPasswordMatch = await bcrypt.compare(changePassword.oldPassword, user.password);
-    if (!oldPasswordMatch) throw new UnauthorizedException({ message: 'Password incorrect' });
-    const passwordHash =  await bcrypt.hash(changePassword.newPassword, 12);
+    const oldPasswordMatch = await bcrypt.compare(
+      changePassword.oldPassword,
+      user.password,
+    );
+    if (!oldPasswordMatch)
+      throw new UnauthorizedException({ message: 'Password incorrect' });
+    const passwordHash = await bcrypt.hash(changePassword.newPassword, 12);
     user.password = passwordHash;
-    await user.save()
+    await user.save();
   }
 
   async getAllMembers(): Promise<User[]> {
