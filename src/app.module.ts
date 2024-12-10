@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -9,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { ConfigModule } from '@nestjs/config';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
@@ -30,8 +30,9 @@ import { ConfigModule } from '@nestjs/config';
       },
     }),
     UsersModule,
+    BooksModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [AppService, { provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}

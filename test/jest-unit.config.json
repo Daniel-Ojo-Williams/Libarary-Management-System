@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "testMatch": ["<rootDir>/unit/*.spec.[tj]s"],
+   "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "testEnvironment": "node"
+}

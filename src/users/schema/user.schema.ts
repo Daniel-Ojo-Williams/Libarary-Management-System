@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export enum MembershipType {
@@ -36,9 +36,6 @@ export class User {
 
   @Field(() => ID)
   id: string;
-
-  @Field(() => Int, { nullable: true })
-  __v: number;
 
   @Prop()
   @Field(() => Date, { nullable: true, description: 'Date user was added' })

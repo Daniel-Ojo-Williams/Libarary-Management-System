@@ -1,13 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
+import { UsersService } from '../../src/users/users.service';
 import mongoose, { Model } from 'mongoose';
-import { MembershipType, Roles, User } from './schema/user.schema';
+import {
+  MembershipType,
+  Roles,
+  User,
+} from '../../src/users/schema/user.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
-import { AddMemberDtoInput, CreateAdminDtoInput } from './dto/create-user.dto';
-import { MailerService } from '../mail/mail.service';
+import {
+  AddMemberDtoInput,
+  CreateAdminDtoInput,
+} from '../../src/users/dto/create-user.dto';
+import { MailerService } from '../../src/mail/mail.service';
 import * as bcrypt from 'bcrypt';
-import { LoginReponse, LoginUserDtoInput } from './dto/login-user.dto';
+import {
+  LoginReponse,
+  LoginUserDtoInput,
+} from '../../src/users/dto/login-user.dto';
 import * as ccrypto from 'node:crypto';
 
 describe('UsersService', () => {
@@ -78,7 +88,6 @@ describe('UsersService', () => {
       updatedAt: new Date(),
       membershipType: null,
       password: adminPayload.password,
-      __v: 0,
     };
     it('Should register admin acount and return user object', async () => {
       jest
